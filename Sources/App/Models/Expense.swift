@@ -17,6 +17,12 @@ final class Expense : Model, Content {
     @Field(key: "title")
     var title: String
     
+    @Field(key: "amount")
+    var amount: Float
+    
+    @Timestamp(key: "created_at", on: .create)
+        var createdAt: Date?
+    
     init(){}
     
     init(id: UUID? = nil, title: String) {

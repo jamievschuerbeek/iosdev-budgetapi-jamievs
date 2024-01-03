@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Jamie Van Schuerbeek on 01/01/2024.
 //
@@ -20,6 +20,9 @@ final class Income : Model, Content {
     @Field(key: "amount")
     var amount: Float
     
+    @Timestamp(key: "created_at", on: .create)
+    var createdAt: Date?
+    
     init(){}
     
     init(id: UUID? = nil, title: String, amount: Float) {
@@ -28,4 +31,4 @@ final class Income : Model, Content {
         self.amount = amount
     }
 }
- 
+

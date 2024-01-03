@@ -13,6 +13,7 @@ struct CreateIncomes : Migration {
             .id()
             .field("title", .string, .required)
             .field("amount", .float, .required)
+            .field("created_at", .datetime, .required)
             .create()
     }
     

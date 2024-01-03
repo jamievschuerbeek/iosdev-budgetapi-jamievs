@@ -12,6 +12,8 @@ struct CreateExpenses : Migration {
         return database.schema("expenses")
             .id()
             .field("title", .string, .required)
+            .field("amount", .float, .required)
+            .field("created_at", .datetime, .required)
             .create()
     }
     
