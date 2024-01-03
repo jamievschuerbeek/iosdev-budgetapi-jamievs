@@ -25,10 +25,11 @@ final class Income : Model, Content {
     
     init(){}
     
-    init(id: UUID? = nil, title: String, amount: Float) {
+    init(id: UUID? = nil, title: String, amount: Float, createdAt: Date? = nil) {
         self.id = id
         self.title = title
         self.amount = amount
+        self.createdAt = createdAt
     }
 }
 

@@ -21,13 +21,15 @@ final class Expense : Model, Content {
     var amount: Float
     
     @Timestamp(key: "created_at", on: .create)
-        var createdAt: Date?
+    var createdAt: Date?
     
     init(){}
     
-    init(id: UUID? = nil, title: String) {
+    init(id: UUID? = nil, title: String, amount: Float, createdAt: Date? = nil) {
         self.id = id
         self.title = title
+        self.amount = amount
+        self.createdAt = createdAt
     }
 }
 
