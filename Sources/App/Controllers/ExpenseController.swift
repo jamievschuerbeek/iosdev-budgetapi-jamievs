@@ -13,7 +13,7 @@ struct ExpenseController: RouteCollection {
         let expenses = routes.grouped("expenses")
         expenses.get(use: index)
         expenses.post(use: create)
-        
+        expenses.get("date",":year", "month", ":month" , use: findDate)
         expenses.group(":id") { expense in
             expense.get(use: show)
         }
@@ -33,5 +33,17 @@ struct ExpenseController: RouteCollection {
             throw Abort(.notFound)
         }
         return expense
+    }
+    
+    func findDate(req: Request) async throws -> [Expense] {
+        //lelijke manier van filteren maar het werkt wel
+        let res = try await Expense.query(on: req.db).all()
+        let expenses = res.filter { value in
+            if value.createdAt?.formatted(.dateTime.year()) == req.parameters.get("year") && value.createdAt!.formatted(.dateTime.month(.abbreviated)) == req.parameters.get("month"){
+                return true
+            }
+            return false
+        }
+        return expenses
     }
 }
