@@ -13,7 +13,7 @@ struct IncomeController : RouteCollection {
         let incomes = routes.grouped("incomes")
         incomes.get(use: index)
         incomes.post(use: create)
-        
+        incomes.get("date",":year", "month", ":month" , use: findDate)
         incomes.group(":id") { income in
             income.get(use: show)
         }
@@ -31,6 +31,28 @@ struct IncomeController : RouteCollection {
     func show(req: Request) async throws -> Income {
         guard let income = try await Income.find(req.parameters.get("id"), on: req.db) else {
             throw Abort(.notFound)
+        }
+        return income
+    }
+    
+    func findDate(req: Request) async throws -> [Income] {
+        let res = try await Income.query(on: req.db).all()
+        let income = res.filter { value in
+            
+            
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.dateFormat = "yyyy"
+            let year = formatter.string(from: value.createdAt!)
+            
+            //maand
+            formatter.dateFormat = "MMM"
+            let month = formatter.string(from: value.createdAt!)
+            
+            if year == req.parameters.get("year") && month == req.parameters.get("month"){
+                return true
+            }
+            return false
         }
         return income
     }
