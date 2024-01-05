@@ -39,7 +39,19 @@ struct ExpenseController: RouteCollection {
         //lelijke manier van filteren maar het werkt wel
         let res = try await Expense.query(on: req.db).all()
         let expenses = res.filter { value in
-            if value.createdAt?.formatted(.dateTime.year()) == req.parameters.get("year") && value.createdAt!.formatted(.dateTime.month(.abbreviated)) == req.parameters.get("month"){
+            
+            //by far de lelijkste code ooit maar fly.io ondersteunt geen date.formatted for some reason ¯\_(ツ)_/¯
+            //jaar
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.dateFormat = "yyyy"
+            let year = formatter.string(from: value.createdAt!)
+            
+            //maand
+            formatter.dateFormat = "MMM"
+            let month = formatter.string(from: value.createdAt!)
+            
+            if year == req.parameters.get("year") && month == req.parameters.get("month"){
                 return true
             }
             return false
