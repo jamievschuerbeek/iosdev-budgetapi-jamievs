@@ -16,6 +16,7 @@ struct ExpenseController: RouteCollection {
         expenses.get("date",":year", "month", ":month" , use: findDate)
         expenses.group(":id") { expense in
             expense.get(use: show)
+            expense.delete(use: delete)
         }
     }
     
@@ -33,6 +34,14 @@ struct ExpenseController: RouteCollection {
             throw Abort(.notFound)
         }
         return expense
+    }
+    
+    func delete(req: Request) async throws -> HTTPStatus {
+        guard let expense = try await Expense.find(req.parameters.get("id"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+        try await expense.delete(on: req.db)
+        return .ok
     }
     
     func findDate(req: Request) async throws -> [Expense] {
